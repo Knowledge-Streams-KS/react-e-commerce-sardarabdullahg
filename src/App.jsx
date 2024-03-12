@@ -1,7 +1,9 @@
+import Product from "./componant/Product";
+
 function App() {
   return (
     <>
-      <h1>helloe</h1>
+      <Product />
     </>
   );
 }
