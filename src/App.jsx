@@ -1,4 +1,4 @@
-import Product from "./componant/Product";
+import Product from "./pages/Product";
 
 function App() {
   return (

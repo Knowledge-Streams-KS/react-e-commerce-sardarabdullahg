@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Product() {
   const [products, setProducts] = useState([]);
@@ -6,9 +7,10 @@ function Product() {
   const [sortOption, setSortOption] = useState("");
 
   useEffect(() => {
-    fetch("https://fakestoreapi.com/products")
-      .then((res) => res.json())
-      .then((json) => setProducts(json));
+    axios
+      .get("https://fakestoreapi.com/products")
+      .then((response) => setProducts(response.data))
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   const handleSearchChange = (event) => {
@@ -19,7 +21,6 @@ function Product() {
     setSortOption(event.target.value);
   };
 
-  // Filter and sort products based on search query and sort option
   const filteredAndSortedProducts = products
     .filter((product) =>
       product.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -58,19 +59,41 @@ function Product() {
         </select>
       </div>
 
-      <ul>
+      <div className="product-container">
         {filteredAndSortedProducts.map((product) => (
-          <li key={product.id}>
+          <div key={product.id} className="product-card">
             <p>{product.title}</p>
             <p>Price: ${product.price}</p>
             <p>Description: {product.description}</p>
-            <p>Category:{product.category}</p>
-            {/* <p>{product.image}</p> */}
-            <p>rating{product.rating}</p>
-            {/* Add more details as needed */}
-          </li>
+            <p>Category: {product.category}</p>
+            <img src={product.image} alt={product.title} />
+            <p>
+              Rating: {product.rating.rate} ({product.rating.count} reviews)
+            </p>
+          </div>
         ))}
-      </ul>
+      </div>
+
+      <style jsx>{`
+        .product-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+        }
+
+        .product-card {
+          border: 1px solid #ddd;
+          padding: 15px;
+          margin: 10px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        img {
+          width: 100px;
+          height: 100px;
+        }
+      `}</style>
     </>
   );
 }
